@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NightBeat | Explore</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-1: #090d18; --bg-2: #111827; --card: rgba(17,24,39,0.72); --text:#f5f7ff; --muted:#cbd5e1; --accent:#7c3aed; --accent-2:#22d3ee; --accent-3:#f472b6; --border:rgba(255,255,255,0.12);
+    }
+    body[data-mood="chill"] { --bg-1:#0f172a; --bg-2:#1d3557; --accent:#38bdf8; --accent-2:#a78bfa; --accent-3:#67e8f9; }
+    body[data-mood="sunset"] { --bg-1:#2b0b2f; --bg-2:#f97316; --accent:#fb7185; --accent-2:#fbbf24; --accent-3:#f59e0b; }
+    body[data-mood="party"] { --bg-1:#130b2a; --bg-2:#7c2d12; --accent:#ec4899; --accent-2:#f59e0b; --accent-3:#a855f7; }
+    body[data-mood="focus"] { --bg-1:#0f172a; --bg-2:#164e63; --accent:#14b8a6; --accent-2:#60a5fa; --accent-3:#34d399; }
+    body[data-mood="romance"] { --bg-1:#1f1033; --bg-2:#4c1d95; --accent:#f472b6; --accent-2:#c084fc; --accent-3:#fda4af; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; font-family: Arial, sans-serif; color: var(--text);
+      background: linear-gradient(135deg, rgba(8,12,24,0.78), rgba(15,23,42,0.72)), url('https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat fixed; padding: 18px 16px 90px;
+    }
+    .page-shell { max-width: 1100px; margin: 0 auto; }
+    .topbar, .bottom-nav, .language-block, .card { border: 1px solid var(--border); box-shadow: 0 22px 46px rgba(15,23,42,0.35); }
+    .topbar {
+      display:flex; justify-content:space-between; align-items:center; padding: 16px 18px; border-radius:18px; background: rgba(17,24,39,0.6); backdrop-filter: blur(12px); margin-bottom: 18px;
+    }
+    .topbar h1 { margin: 0; font-size: clamp(1.5rem, 3vw, 2.3rem); letter-spacing: 0.08em; text-transform: uppercase; }
+    .topbar .actions { display: flex; gap: 10px; }
+    .icon-btn {
+      width: 42px; height: 42px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.05); color: white; display:grid; place-items:center; cursor:pointer; font-size:18px;
+    }
+    .mood-picker { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin: 10px 0 22px; }
+    .mood-btn {
+      border: 1px solid var(--border); border-radius:999px; background: rgba(255,255,255,0.06); color: var(--text); padding: 9px 14px; cursor:pointer; text-transform:capitalize; font-size:0.8rem;
+    }
+    .mood-btn.active { background: linear-gradient(135deg, var(--accent), var(--accent-2)); border-color: transparent; }
+    .explore-section { display: grid; gap: 24px; }
+    .language-block { background: rgba(17,24,39,0.58); border-radius: 20px; padding: 18px; }
+    .language-name { margin: 0 0 16px; color: var(--accent-2); text-align:center; font-size:2rem; }
+    .music-cards { display:grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; }
+    .card { background: rgba(255,255,255,0.04); border-radius: 16px; padding: 16px; text-align:center; transition: transform 0.2s ease; }
+    .card:hover { transform: translateY(-3px); }
+    .card .cover {
+      width: 100%; height: 110px; border-radius: 14px; margin-bottom: 10px; background: linear-gradient(135deg, var(--accent), var(--accent-3)); display:grid; place-items:center; font-size: 1.9rem; color: white;
+    }
+    .card h3 { margin: 0; font-size: 1rem; }
+    .bottom-nav {
+      position: fixed; bottom:12px; left:50%; transform: translateX(-50%); width: min(94vw, 520px); display:flex; justify-content:space-around; align-items:center; background: rgba(15,23,42,0.82); border-radius:18px; padding:12px 18px; backdrop-filter: blur(14px); z-index:10;
+    }
+    .bottom-nav a { color: white; text-decoration:none; width:44px; height:44px; border-radius:12px; display:grid; place-items:center; font-size:1.3rem; }
+    .bottom-nav a:hover { background: rgba(255,255,255,0.08); }
+    @media (max-width: 560px) { .music-cards { grid-template-columns: 1fr; } }
+  </style>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-mood="midnight">
+  <div class="page-shell">
+    <header class="topbar">
+      <h1>Explore</h1>
+      <div class="actions">
+        <button class="icon-btn" onclick="window.location.href='home.html'" aria-label="Home"><i class="fas fa-home"></i></button>
+        <button class="icon-btn" onclick="window.open('video.html','nightbeat-media')" aria-label="Video"><i class="fas fa-video"></i></button>
+      </div>
+    </header>
+
+    <div class="mood-picker" aria-label="Mood selector">
+      <button class="mood-btn active" data-mood-btn="midnight">midnight</button>
+      <button class="mood-btn" data-mood-btn="chill">chill</button>
+      <button class="mood-btn" data-mood-btn="sunset">sunset</button>
+      <button class="mood-btn" data-mood-btn="party">party</button>
+      <button class="mood-btn" data-mood-btn="focus">focus</button>
+      <button class="mood-btn" data-mood-btn="romance">romance</button>
+    </div>
+
+    <div class="explore-section">
+      <div class="language-block">
+        <h3 class="language-name">English</h3>
+        <div class="music-cards">
+          <div class="card"><div class="cover"><i class="fas fa-music"></i></div><h3>Pop Hits</h3></div>
+          <div class="card"><div class="cover"><i class="fas fa-guitar"></i></div><h3>Rock Classics</h3></div>
+          <div class="card"><div class="cover"><i class="fas fa-headphones"></i></div><h3>Jazz Vibes</h3></div>
+          <div class="card"><div class="cover"><i class="fas fa-drum"></i></div><h3>Hip Hop Beats</h3></div>
+        </div>
+      </div>
+
+      <div class="language-block">
+        <h3 class="language-name">Hindi</h3>
+        <div class="music-cards">
+          <div class="card"><div class="cover"><i class="fas fa-music"></i></div><h3>Bollywood Beats</h3></div>
+          <div class="card"><div class="cover"><i class="fas fa-heart"></i></div><h3>Romantic Songs</h3></div>
+          <div class="card"><div class="cover"><i class="fas fa-drum"></i></div><h3>Desi Hip Hop</h3></div>
+          <div class="card"><div class="cover"><i class="fas fa-microphone-alt"></i></div><h3>Classic Melodies</h3></div>
+        </div>
+      </div>
+
+      <div class="language-block">
+        <h3 class="language-name">Tamil</h3>
+        <div class="music-cards">
+          <div class="card"><div class="cover"><i class="fas fa-bolt"></i></div><h3>Mass Beats</h3></div>
+          <div class="card"><div class="cover"><i class="fas fa-music"></i></div><h3>Melody Hits</h3></div>
+          <div class="card"><div class="cover"><i class="fas fa-volume-up"></i></div><h3>Dance Numbers</h3></div>
+          <div class="card"><div class="cover"><i class="fas fa-star"></i></div><h3>Love Melodies</h3></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav" aria-label="Main navigation">
+    <a href="home.html" aria-label="Home"><i class="fas fa-home"></i></a>
+    <a href="explore.html" aria-label="Explore"><i class="fas fa-compass"></i></a>
+    <a href="search.html" aria-label="Search"><i class="fas fa-search"></i></a>
+    <a href="profile.html" aria-label="Profile"><i class="fas fa-user"></i></a>
+  </nav>
+
+  <script>
+    function applyMood(moodKey) {
+      const selectedMood = moodKey || 'midnight';
+      document.body.setAttribute('data-mood', selectedMood);
+      document.querySelectorAll('.mood-btn').forEach(button => {
+        button.classList.toggle('active', button.dataset.moodBtn === selectedMood);
+      });
+      localStorage.setItem('musicMood', selectedMood);
+    }
+    document.querySelectorAll('.mood-btn').forEach(button => {
+      button.addEventListener('click', () => applyMood(button.dataset.moodBtn));
+    });
+    const savedMood = localStorage.getItem('musicMood') || 'midnight';
+    applyMood(savedMood);
+  </script>
+</body>
+</html>

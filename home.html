@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101010">
+  <title>NightBeat | For You</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    :root { --ink:#f8fafc; --soft:#a5a8b6; --line:rgba(255,255,255,.12); --panel:rgba(18,18,23,.78); --pink:#ff3f81; --cyan:#35d7cf; --yellow:#ffd166; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; min-height:100vh; color:var(--ink); background:#090a0e; font-family:'DM Sans',sans-serif; overflow-x:hidden; }
+    body::before { content:""; position:fixed; inset:0; z-index:-2; background:radial-gradient(circle at 15% 5%,rgba(255,63,129,.2),transparent 30%),radial-gradient(circle at 90% 80%,rgba(53,215,207,.12),transparent 28%),#090a0e; }
+    button, a { font:inherit; } button { color:inherit; }
+    .app { width:min(100%,1240px); margin:auto; padding:18px 22px 120px; }
+    .topbar { display:flex; align-items:center; justify-content:space-between; gap:18px; position:sticky; top:0; z-index:20; padding:12px 0 18px; background:linear-gradient(#090a0e 72%,transparent); }
+    .brand { display:flex; align-items:center; gap:10px; color:var(--ink); text-decoration:none; }
+    .brand-mark { display:grid; place-items:center; width:38px; height:38px; border-radius:13px; color:#111; background:linear-gradient(135deg,var(--pink),var(--yellow)); box-shadow:0 8px 28px rgba(255,63,129,.3); }
+    .brand strong { font:700 1.2rem 'Space Grotesk',sans-serif; letter-spacing:-.04em; }
+    .top-actions,.post-tools,.platforms { display:flex; align-items:center; gap:9px; }
+    .icon-btn { display:grid; place-items:center; width:42px; height:42px; border:1px solid var(--line); border-radius:50%; background:rgba(255,255,255,.06); cursor:pointer; transition:.25s ease; }
+    .icon-btn:hover { background:var(--pink); transform:translateY(-3px) rotate(-4deg); }
+    .intro { display:flex; align-items:end; justify-content:space-between; gap:20px; padding:40px 0 26px; animation:rise .7s ease both; }
+    .kicker { margin:0 0 10px; color:var(--cyan); font-size:.75rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; }
+    h1 { margin:0; max-width:650px; font:700 clamp(2.4rem,6vw,5.6rem)/.95 'Space Grotesk',sans-serif; letter-spacing:-.08em; }
+    .intro p { max-width:340px; margin:0; color:var(--soft); line-height:1.6; }
+    .filter-row { display:flex; gap:9px; overflow:auto; padding:3px 0 22px; scrollbar-width:none; }
+    .filter-row::-webkit-scrollbar { display:none; }
+    .filter { flex:0 0 auto; border:1px solid var(--line); border-radius:999px; padding:9px 16px; color:var(--soft); background:rgba(255,255,255,.04); cursor:pointer; transition:.2s; }
+    .filter.active,.filter:hover { color:#111; border-color:transparent; background:var(--yellow); }
+    .feed { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; }
+    .post { position:relative; min-height:570px; overflow:hidden; border:1px solid var(--line); border-radius:24px; background:var(--panel); box-shadow:0 22px 70px rgba(0,0,0,.25); animation:rise .7s ease both; }
+    .post:nth-child(2) { animation-delay:.1s; } .post:nth-child(3) { animation-delay:.2s; }
+    .post-media { position:relative; height:390px; overflow:hidden; background:#1a1b22; cursor:pointer; }
+    .post-media video { width:100%; height:100%; object-fit:cover; display:block; opacity:.88; transition:transform .6s ease; }
+    .post:hover video { transform:scale(1.04); }
+    .post-media::after { content:""; position:absolute; inset:0; pointer-events:none; background:linear-gradient(transparent 45%,rgba(0,0,0,.72)); }
+    .media-label { position:absolute; top:14px; left:14px; z-index:2; padding:7px 10px; border-radius:999px; background:rgba(0,0,0,.45); backdrop-filter:blur(10px); font-size:.72rem; font-weight:700; }
+    .sound-wave { position:absolute; left:16px; bottom:15px; z-index:2; display:flex; align-items:center; gap:3px; height:25px; }
+    .sound-wave i { width:3px; height:var(--h); border-radius:3px; background:var(--yellow); animation:pulse .9s ease-in-out infinite alternate; }
+    .sound-wave i:nth-child(2n) { animation-delay:.2s; } .sound-wave i:nth-child(3n) { animation-delay:.4s; }
+    .post-copy { padding:17px 16px 15px; }
+    .creator { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+    .avatar { display:grid; place-items:center; width:34px; height:34px; border-radius:50%; color:#111; font-weight:700; background:linear-gradient(135deg,var(--cyan),var(--yellow)); }
+    .creator strong { display:block; font-size:.9rem; } .creator span { color:var(--soft); font-size:.78rem; }
+    .post h2 { margin:0 0 6px; font:600 1.2rem 'Space Grotesk',sans-serif; }
+    .post-copy p { margin:0; color:var(--soft); font-size:.88rem; line-height:1.45; }
+    .post-tools { justify-content:space-between; margin-top:15px; }
+    .tool { border:0; padding:5px 0; background:none; cursor:pointer; color:var(--soft); } .tool:hover,.tool.liked { color:var(--pink); }
+    .platform-strip { display:flex; align-items:center; justify-content:space-between; gap:16px; margin:26px 0; padding:18px 20px; border:1px solid var(--line); border-radius:20px; background:rgba(255,255,255,.045); }
+    .platform-strip p { margin:0; color:var(--soft); font-size:.86rem; } .platforms a { display:grid; place-items:center; width:36px; height:36px; border-radius:50%; color:var(--ink); text-decoration:none; background:rgba(255,255,255,.08); transition:.2s; } .platforms a:hover { color:#111; background:var(--yellow); transform:translateY(-3px); }
+    .player { position:fixed; left:50%; bottom:18px; z-index:30; display:flex; align-items:center; gap:13px; width:min(calc(100% - 28px),620px); padding:12px 15px; border:1px solid rgba(255,255,255,.15); border-radius:18px; background:rgba(22,22,28,.9); box-shadow:0 18px 50px rgba(0,0,0,.45); backdrop-filter:blur(18px); transform:translateX(-50%); }
+    .player-art { width:40px; height:40px; border-radius:11px; background:linear-gradient(135deg,var(--pink),var(--cyan)); display:grid; place-items:center; }
+    .player-info { flex:1; min-width:0; } .player-info strong,.player-info span { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; } .player-info span { color:var(--soft); font-size:.75rem; }
+    .progress { flex:0 1 180px; accent-color:var(--pink); }
+    .page-nav { position:fixed; left:50%; bottom:18px; z-index:31; display:flex; align-items:center; gap:6px; padding:7px; border:1px solid var(--line); border-radius:18px; background:rgba(18,18,23,.9); box-shadow:0 18px 50px rgba(0,0,0,.4); backdrop-filter:blur(18px); transform:translateX(-50%); }
+    .page-nav a { display:grid; place-items:center; width:42px; height:42px; border-radius:13px; color:var(--soft); text-decoration:none; transition:.2s ease; }
+    .page-nav a:hover,.page-nav a.active { color:#111; background:var(--yellow); transform:translateY(-3px); }
+    .page-nav a span { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
+    .toast,.modal { position:fixed; inset:0; z-index:50; display:none; place-items:center; padding:20px; background:rgba(0,0,0,.68); backdrop-filter:blur(8px); }
+    .toast { inset:auto 20px 92px auto; width:max-content; padding:13px 17px; border:1px solid var(--line); border-radius:12px; background:#20212b; color:var(--ink); }
+    .modal.open { display:grid; } .dialog { width:min(100%,430px); padding:28px; border:1px solid var(--line); border-radius:24px; background:#171820; animation:pop .25s ease both; } .dialog h2 { margin:0 0 8px; font:600 1.6rem 'Space Grotesk',sans-serif; } .dialog p { color:var(--soft); line-height:1.5; } .dialog-actions { display:flex; gap:10px; margin-top:20px; } .dialog-actions button { flex:1; padding:11px 15px; border:0; border-radius:12px; cursor:pointer; background:var(--yellow); color:#111; font-weight:700; } .dialog-actions button.secondary { color:var(--ink); background:rgba(255,255,255,.08); }
+    @keyframes rise { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:none; } } @keyframes pop { from { opacity:0; transform:scale(.94); } to { opacity:1; transform:none; } } @keyframes pulse { to { transform:scaleY(.45); opacity:.55; } }
+    @media (max-width:850px) { .feed { grid-template-columns:repeat(2,minmax(0,1fr)); } .intro { display:block; } .intro p { margin-top:16px; } }
+    @media (max-width:600px) { .app { padding-inline:14px; } .feed { display:block; } .post { margin-bottom:18px; min-height:0; } .post-media { height:64vh; max-height:510px; } .platform-strip { align-items:flex-start; flex-direction:column; } .player { bottom:10px; } .progress { display:none; } }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <a class="brand" href="home.html"><span class="brand-mark"><i class="fas fa-waveform-lines"></i></span><strong>NightBeat</strong></a>
+      <div class="top-actions">
+        <button class="icon-btn" type="button" data-modal="shareModal" aria-label="Share NightBeat"><i class="fas fa-share-nodes"></i></button>
+        <button class="icon-btn" type="button" onclick="window.open('video.html','nightbeat-media')" aria-label="Open video room"><i class="fas fa-video"></i></button>
+        <button class="icon-btn" type="button" onclick="window.open('audio.html','nightbeat-media')" aria-label="Open audio room"><i class="fas fa-headphones"></i></button>
+      </div>
+    </header>
+    <section class="intro"><div><p class="kicker">Your daily soundtrack</p><h1>Scroll into<br><span style="color:var(--pink)">the feeling.</span></h1></div><p>Discover music, movement and moments made for your mood. Tap any post to make it your soundtrack.</p></section>
+    <nav class="filter-row" aria-label="Feed filters"><button class="filter active">For you</button><button class="filter">Following</button><button class="filter">Trending</button><button class="filter">New drops</button><button class="filter">Live sessions</button></nav>
+    <section class="feed" aria-label="Music video feed">
+      <article class="post" data-title="Neon Drive" data-artist="Ayla Ray"><div class="post-media"><span class="media-label"><i class="fas fa-fire"></i> Trending now</span><video loop playsinline preload="metadata" poster="img.jpg"><source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4"></video><div class="sound-wave" aria-hidden="true"><i style="--h:12px"></i><i style="--h:24px"></i><i style="--h:17px"></i><i style="--h:9px"></i><i style="--h:21px"></i><i style="--h:14px"></i></div></div><div class="post-copy"><div class="creator"><span class="avatar">AR</span><div><strong>@aylaray</strong><span>Original sound</span></div></div><h2>Neon Drive</h2><p>Late-night basslines for your next city escape.</p><div class="post-tools"><button class="tool like-btn"><i class="far fa-heart"></i> <span>12.8K</span></button><button class="tool share-btn"><i class="fas fa-share"></i> Share</button><button class="tool play-btn"><i class="fas fa-play"></i> Play sound</button></div></div></article>
+      <article class="post" data-title="Golden Hour" data-artist="Sora Bloom"><div class="post-media"><span class="media-label"><i class="fas fa-sparkles"></i> New drop</span><video loop playsinline preload="metadata" poster="img.jpg"><source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4"></video><div class="sound-wave" aria-hidden="true"><i style="--h:20px"></i><i style="--h:10px"></i><i style="--h:25px"></i><i style="--h:14px"></i><i style="--h:22px"></i><i style="--h:8px"></i></div></div><div class="post-copy"><div class="creator"><span class="avatar" style="background:linear-gradient(135deg,var(--pink),#9b8cff)">SB</span><div><strong>@sorabloom</strong><span>Original sound</span></div></div><h2>Golden Hour</h2><p>Soft light, open roads and a chorus that stays.</p><div class="post-tools"><button class="tool like-btn"><i class="far fa-heart"></i> <span>8.4K</span></button><button class="tool share-btn"><i class="fas fa-share"></i> Share</button><button class="tool play-btn"><i class="fas fa-play"></i> Play sound</button></div></div></article>
+      <article class="post" data-title="Cloud Drift" data-artist="Nova Lane"><div class="post-media"><span class="media-label"><i class="fas fa-headphones"></i> Chill edit</span><video loop playsinline preload="metadata" poster="img.jpg"><source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4"></video><div class="sound-wave" aria-hidden="true"><i style="--h:8px"></i><i style="--h:19px"></i><i style="--h:12px"></i><i style="--h:26px"></i><i style="--h:15px"></i><i style="--h:10px"></i></div></div><div class="post-copy"><div class="creator"><span class="avatar" style="background:linear-gradient(135deg,var(--cyan),#8093ff)">NL</span><div><strong>@novalane</strong><span>Original sound</span></div></div><h2>Cloud Drift</h2><p>A slow-burn loop for quiet rooms and clear thoughts.</p><div class="post-tools"><button class="tool like-btn"><i class="far fa-heart"></i> <span>6.1K</span></button><button class="tool share-btn"><i class="fas fa-share"></i> Share</button><button class="tool play-btn"><i class="fas fa-play"></i> Play sound</button></div></div></article>
+    </section>
+    <section class="platform-strip"><p>Keep the vibe going on your favorite app</p><div class="platforms"><a href="https://www.youtube.com/" target="_blank" rel="noopener" title="YouTube"><i class="fab fa-youtube"></i></a><a href="https://open.spotify.com/" target="_blank" rel="noopener" title="Spotify"><i class="fab fa-spotify"></i></a><a href="https://music.apple.com/" target="_blank" rel="noopener" title="Apple Music"><i class="fab fa-apple"></i></a><a href="https://soundcloud.com/" target="_blank" rel="noopener" title="SoundCloud"><i class="fab fa-soundcloud"></i></a><a href="https://www.tiktok.com/music" target="_blank" rel="noopener" title="TikTok Music"><i class="fab fa-tiktok"></i></a></div></section>
+  </main>
+  <nav class="page-nav" aria-label="Page navigation">
+    <a class="active" href="home.html" aria-label="Home" title="Home"><i class="fas fa-house"></i><span>Home</span></a>
+    <a href="explore.html" aria-label="Explore" title="Explore"><i class="fas fa-compass"></i><span>Explore</span></a>
+    <a href="search.html" aria-label="Search" title="Search"><i class="fas fa-magnifying-glass"></i><span>Search</span></a>
+    <a href="profile.html" aria-label="Profile" title="Profile"><i class="fas fa-user"></i><span>Profile</span></a>
+  </nav>
+  <aside class="player" aria-label="Music player"><div class="player-art"><i class="fas fa-music"></i></div><div class="player-info"><strong id="playerTitle">Choose a sound</strong><span id="playerArtist">NightBeat feed</span></div><input class="progress" id="progress" type="range" min="0" max="100" value="0" aria-label="Playback progress"><button class="icon-btn" id="mainPlay" type="button" aria-label="Play or pause"><i class="fas fa-play"></i></button></aside>
+  <div class="modal" id="shareModal" role="dialog" aria-modal="true" aria-labelledby="shareTitle"><div class="dialog"><h2 id="shareTitle">Share the vibe</h2><p>Send this NightBeat feed to someone who needs a better soundtrack.</p><div class="dialog-actions"><button id="copyButton" type="button">Copy link</button><button class="secondary close-modal" type="button">Close</button></div></div></div>
+  <div class="toast" id="toast" role="status"></div>
+  <script>
+    const posts = [...document.querySelectorAll('.post')];
+    const videos = posts.map(post => post.querySelector('video'));
+    const playerTitle = document.getElementById('playerTitle');
+    const playerArtist = document.getElementById('playerArtist');
+    const mainPlay = document.getElementById('mainPlay');
+    let activeVideo = null;
+    function showToast(message) { const toast = document.getElementById('toast'); toast.textContent = message; toast.style.display = 'grid'; setTimeout(() => { toast.style.display = 'none'; }, 1800); }
+    function setActive(video, post) { videos.forEach(item => { if (item !== video) { item.pause(); item.currentTime = 0; } }); activeVideo = video; playerTitle.textContent = post.dataset.title; playerArtist.textContent = post.dataset.artist; video.play().then(() => { mainPlay.innerHTML = '<i class="fas fa-pause"></i>'; }).catch(() => { mainPlay.innerHTML = '<i class="fas fa-play"></i>'; showToast('Tap play to start the sound'); }); }
+    posts.forEach(post => { const video = post.querySelector('video'); post.querySelector('.post-media').addEventListener('click', () => setActive(video, post)); post.querySelector('.play-btn').addEventListener('click', () => setActive(video, post)); post.querySelector('.like-btn').addEventListener('click', event => { event.currentTarget.classList.toggle('liked'); event.currentTarget.querySelector('i').classList.toggle('far'); event.currentTarget.querySelector('i').classList.toggle('fas'); }); post.querySelector('.share-btn').addEventListener('click', () => { navigator.clipboard?.writeText(location.href); showToast('Feed link copied'); }); });
+    mainPlay.addEventListener('click', () => { if (!activeVideo) { setActive(videos[0], posts[0]); return; } if (activeVideo.paused) { activeVideo.play(); mainPlay.innerHTML = '<i class="fas fa-pause"></i>'; } else { activeVideo.pause(); mainPlay.innerHTML = '<i class="fas fa-play"></i>'; } });
+    videos.forEach(video => video.addEventListener('timeupdate', () => { if (video === activeVideo) document.getElementById('progress').value = video.duration ? video.currentTime / video.duration * 100 : 0; }));
+    document.getElementById('progress').addEventListener('input', event => { if (activeVideo?.duration) activeVideo.currentTime = event.target.value / 100 * activeVideo.duration; });
+    document.querySelectorAll('.filter').forEach(button => button.addEventListener('click', () => { document.querySelectorAll('.filter').forEach(item => item.classList.remove('active')); button.classList.add('active'); showToast(button.textContent + ' feed selected'); }));
+    document.querySelectorAll('[data-modal]').forEach(button => button.addEventListener('click', () => document.getElementById(button.dataset.modal).classList.add('open')));
+    document.querySelectorAll('.close-modal').forEach(button => button.addEventListener('click', () => button.closest('.modal').classList.remove('open')));
+    document.getElementById('copyButton').addEventListener('click', () => { navigator.clipboard?.writeText(location.href); showToast('Link copied to clipboard'); document.getElementById('shareModal').classList.remove('open'); });
+    document.querySelectorAll('.modal').forEach(modal => modal.addEventListener('click', event => { if (event.target === modal) modal.classList.remove('open'); }));
+  </script>
+</body>
+</html>

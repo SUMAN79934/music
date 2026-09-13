@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NightBeat | Search</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-1: #090d18; --bg-2: #111827; --card: rgba(17,24,39,0.72); --text:#f5f7ff; --muted:#cbd5e1; --accent:#7c3aed; --accent-2:#22d3ee; --accent-3:#f472b6; --border:rgba(255,255,255,0.12);
+        }
+        body[data-mood="chill"] { --bg-1:#0f172a; --bg-2:#1d3557; --accent:#38bdf8; --accent-2:#a78bfa; --accent-3:#67e8f9; }
+        body[data-mood="sunset"] { --bg-1:#2b0b2f; --bg-2:#f97316; --accent:#fb7185; --accent-2:#fbbf24; --accent-3:#f59e0b; }
+        body[data-mood="party"] { --bg-1:#130b2a; --bg-2:#7c2d12; --accent:#ec4899; --accent-2:#f59e0b; --accent-3:#a855f7; }
+        body[data-mood="focus"] { --bg-1:#0f172a; --bg-2:#164e63; --accent:#14b8a6; --accent-2:#60a5fa; --accent-3:#34d399; }
+        body[data-mood="romance"] { --bg-1:#1f1033; --bg-2:#4c1d95; --accent:#f472b6; --accent-2:#c084fc; --accent-3:#fda4af; }
+        * { box-sizing: border-box; }
+        body {
+            margin:0; min-height:100vh; font-family:'Segoe UI',sans-serif; color: var(--text);
+            background: linear-gradient(135deg, rgba(8,12,24,0.78), rgba(15,23,42,0.72)), url('https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat fixed; padding: 18px 16px 90px;
+        }
+        .page-shell { max-width: 900px; margin: 0 auto; }
+        .topbar {
+            display:flex; justify-content:space-between; align-items:center; padding: 16px 18px; border-radius:18px; background: rgba(17,24,39,0.6); border:1px solid var(--border); backdrop-filter: blur(12px); margin-bottom: 22px;
+        }
+        .topbar h1 { margin:0; letter-spacing:0.08em; text-transform:uppercase; }
+        .icon-btn {
+            width:42px; height:42px; border-radius:10px; border:1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.05); color: white; display:grid; place-items:center; cursor:pointer;
+        }
+        .mood-picker { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom: 24px; }
+        .mood-btn { border:1px solid var(--border); border-radius:999px; background: rgba(255,255,255,0.06); color: var(--text); padding: 9px 14px; cursor:pointer; text-transform:capitalize; font-size:0.8rem; }
+        .mood-btn.active { background: linear-gradient(135deg, var(--accent), var(--accent-2)); border-color: transparent; }
+        .search-bar {
+            width:100%; max-width: 760px; margin: 0 auto 22px; display:flex; align-items:center; background: rgba(17,24,39,0.7); border-radius: 20px; border:1px solid var(--border); padding: 12px 18px;
+        }
+        .search-bar input { flex:1; background: transparent; border:none; outline:none; color: var(--text); font-size:1.1em; }
+        .songs-container {
+            background: rgba(17,24,39,0.7); border:1px solid var(--border); border-radius:20px; padding:24px 18px; box-shadow: 0 22px 46px rgba(15,23,42,0.35); margin: 0 auto;
+        }
+        .section-title { margin: 0 0 16px; font-size:1.4rem; }
+        .song-list { list-style:none; padding:0; margin:0 0 26px; }
+        .song-item { display:flex; align-items:center; justify-content:space-between; background: rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:14px 16px; margin-bottom:12px; }
+        .song-info { text-align:left; }
+        .song-title { font-weight:700; display:block; }
+        .song-artist { color: var(--muted); }
+        .badge { background: linear-gradient(135deg, var(--accent), var(--accent-2)); border-radius: 10px; padding: 4px 10px; font-size:0.76rem; }
+        .social-icons { display:flex; gap: 12px; justify-content:center; flex-wrap:wrap; margin-top: 10px; }
+        .social-icons a { color: white; font-size: 1.5rem; text-decoration:none; }
+        .bottom-nav {
+            position: fixed; bottom:12px; left:50%; transform: translateX(-50%); width: min(94vw, 520px); display:flex; justify-content:space-around; align-items:center; background: rgba(15,23,42,0.82); border:1px solid var(--border); border-radius:18px; padding:12px 18px; backdrop-filter: blur(14px); z-index:10;
+        }
+        .bottom-nav a { color: white; text-decoration:none; width:44px; height:44px; border-radius:12px; display:grid; place-items:center; font-size:1.3rem; }
+        .bottom-nav a:hover { background: rgba(255,255,255,0.08); }
+    </style>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body data-mood="midnight">
+    <div class="page-shell">
+        <header class="topbar">
+            <h1>Search</h1>
+            <div style="display:flex; gap:10px;">
+                <button class="icon-btn" onclick="window.location.href='home.html'" aria-label="Home"><i class="fas fa-home"></i></button>
+                <button class="icon-btn" onclick="window.location.href='explore.html'" aria-label="Explore"><i class="fas fa-compass"></i></button>
+            </div>
+        </header>
+
+        <div class="mood-picker" aria-label="Mood selector">
+            <button class="mood-btn active" data-mood-btn="midnight">midnight</button>
+            <button class="mood-btn" data-mood-btn="chill">chill</button>
+            <button class="mood-btn" data-mood-btn="sunset">sunset</button>
+            <button class="mood-btn" data-mood-btn="party">party</button>
+            <button class="mood-btn" data-mood-btn="focus">focus</button>
+            <button class="mood-btn" data-mood-btn="romance">romance</button>
+        </div>
+
+        <div class="search-bar">
+            <i class="fas fa-search" style="margin-right:10px; color:#aaa;"></i>
+            <input type="text" id="songSearch" placeholder="Search songs or artists...">
+        </div>
+
+        <div class="songs-container">
+            <div class="section-title"><i class="fas fa-fire"></i> Trending Songs</div>
+            <ul class="song-list" id="trendingSongs"></ul>
+            <div class="section-title"><i class="fas fa-music"></i> New Songs</div>
+            <ul class="song-list" id="newSongs"></ul>
+
+            <div style="margin-top: 18px; text-align:center; color:#ddd;">Listen or watch on:</div>
+            <div class="social-icons">
+                <a href="https://open.spotify.com/" target="_blank" title="Spotify"><i class="fab fa-spotify" style="color:#1DB954;"></i></a>
+                <a href="https://music.youtube.com/" target="_blank" title="YouTube Music"><i class="fab fa-youtube" style="color:#FF0000;"></i></a>
+                <a href="https://soundcloud.com/" target="_blank" title="SoundCloud"><i class="fab fa-soundcloud" style="color:#FF5500;"></i></a>
+                <a href="https://www.apple.com/apple-music/" target="_blank" title="Apple Music"><i class="fab fa-apple" style="color:#fff;"></i></a>
+                <a href="https://www.tiktok.com/music" target="_blank" title="TikTok Music"><i class="fab fa-tiktok" style="color:#25F4EE;"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <nav class="bottom-nav" aria-label="Main navigation">
+        <a href="home.html" aria-label="Home"><i class="fas fa-home"></i></a>
+        <a href="explore.html" aria-label="Explore"><i class="fas fa-compass"></i></a>
+        <a href="search.html" aria-label="Search"><i class="fas fa-search"></i></a>
+        <a href="profile.html" aria-label="Profile"><i class="fas fa-user"></i></a>
+    </nav>
+
+    <script>
+        const trending = [
+            { title: 'Calm Down', artist: 'Rema & Selena Gomez' },
+            { title: 'Flowers', artist: 'Miley Cyrus' },
+            { title: 'Unholy', artist: 'Sam Smith & Kim Petras' },
+            { title: 'As It Was', artist: 'Harry Styles' }
+        ];
+        const newsongs = [
+            { title: 'Espresso', artist: 'Sabrina Carpenter' },
+            { title: 'I Had Some Help', artist: 'Post Malone & Morgan Wallen' },
+            { title: 'Lunch', artist: 'Billie Eilish' },
+            { title: 'Good Luck, Babe!', artist: 'Chappell Roan' }
+        ];
+
+        function renderSongs(list, elementId, badgeText) {
+            const ul = document.getElementById(elementId);
+            ul.innerHTML = list.map(song => `
+                <li class="song-item">
+                    <div class="song-info">
+                        <span class="song-title">${song.title}</span>
+                        <span class="song-artist">${song.artist}</span>
+                    </div>
+                    <span class="badge">${badgeText}</span>
+                </li>
+            `).join('');
+        }
+
+        function applyMood(moodKey) {
+            const selectedMood = moodKey || 'midnight';
+            document.body.setAttribute('data-mood', selectedMood);
+            document.querySelectorAll('.mood-btn').forEach(button => {
+                button.classList.toggle('active', button.dataset.moodBtn === selectedMood);
+            });
+            localStorage.setItem('musicMood', selectedMood);
+        }
+
+        document.querySelectorAll('.mood-btn').forEach(button => {
+            button.addEventListener('click', () => applyMood(button.dataset.moodBtn));
+        });
+
+        const savedMood = localStorage.getItem('musicMood') || 'midnight';
+        applyMood(savedMood);
+        renderSongs(trending, 'trendingSongs', 'Trending');
+        renderSongs(newsongs, 'newSongs', 'New');
+
+        document.getElementById('songSearch').addEventListener('input', function() {
+            const query = this.value.toLowerCase();
+            const filteredTrending = trending.filter(song =>
+                song.title.toLowerCase().includes(query) || song.artist.toLowerCase().includes(query)
+            );
+            const filteredNew = newsongs.filter(song =>
+                song.title.toLowerCase().includes(query) || song.artist.toLowerCase().includes(query)
+            );
+            renderSongs(filteredTrending, 'trendingSongs', 'Trending');
+            renderSongs(filteredNew, 'newSongs', 'New');
+        });
+    </script>
+</body>
+</html>

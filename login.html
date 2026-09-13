@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NightBeat | Login</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <style>
+    :root {
+      --bg-1: #090d18; --bg-2: #111827; --card: rgba(17,24,39,0.72); --text:#f5f7ff; --muted:#cbd5e1; --accent:#7c3aed; --accent-2:#22d3ee; --accent-3:#f472b6; --border:rgba(255,255,255,0.12);
+    }
+    body[data-mood="chill"] { --bg-1:#0f172a; --bg-2:#1d3557; --accent:#38bdf8; --accent-2:#a78bfa; --accent-3:#67e8f9; }
+    body[data-mood="sunset"] { --bg-1:#2b0b2f; --bg-2:#f97316; --accent:#fb7185; --accent-2:#fbbf24; --accent-3:#f59e0b; }
+    body[data-mood="party"] { --bg-1:#130b2a; --bg-2:#7c2d12; --accent:#ec4899; --accent-2:#f59e0b; --accent-3:#a855f7; }
+    body[data-mood="focus"] { --bg-1:#0f172a; --bg-2:#164e63; --accent:#14b8a6; --accent-2:#60a5fa; --accent-3:#34d399; }
+    body[data-mood="romance"] { --bg-1:#1f1033; --bg-2:#4c1d95; --accent:#f472b6; --accent-2:#c084fc; --accent-3:#fda4af; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; color: var(--text);
+      background: linear-gradient(135deg, rgba(8,12,24,0.8), rgba(15,23,42,0.72)), url('https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat fixed; min-height:100vh; display:flex; justify-content:center; align-items:center;
+    }
+    .container { width: min(90vw, 420px); }
+    .login-box {
+      background: rgba(17,24,39,0.72); border:1px solid var(--border); border-radius:22px; box-shadow: 0 22px 46px rgba(15,23,42,0.35); padding: 26px 20px; text-align:center; backdrop-filter: blur(10px);
+    }
+    .profile-icon { width: 84px; height:84px; border-radius:50%; object-fit:cover; border:3px solid rgba(255,255,255,0.2); }
+    .highlight { display:inline-block; background: linear-gradient(135deg, var(--accent), var(--accent-2)); color:#fff; padding: 6px 18px; border-radius: 999px; letter-spacing: 0.08em; margin: 16px 0 8px; }
+    label { display:block; text-align:left; margin-top:16px; font-size:14px; color: var(--muted); }
+    input { width:100%; padding: 12px 14px; margin-top:6px; border:none; border-radius:12px; background:#111827; color:#fff; border:1px solid rgba(255,255,255,0.08); }
+    .forgot { text-align:right; margin-top:8px; }
+    .forgot a, .signup a { color: var(--accent-2); text-decoration:none; }
+    button {
+      width:100%; padding: 12px; margin-top: 20px; border:none; border-radius:20px; background: linear-gradient(135deg, var(--accent), var(--accent-2)); color:white; cursor:pointer; font-weight:700;
+    }
+    .signup { margin-top:12px; }
+    .mood-picker { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom: 18px; }
+    .mood-btn { border:1px solid var(--border); border-radius:999px; background: rgba(255,255,255,0.06); color: var(--text); padding: 8px 12px; cursor:pointer; text-transform:capitalize; font-size:0.76rem; }
+    .mood-btn.active { background: linear-gradient(135deg, var(--accent), var(--accent-2)); border-color: transparent; }
+  </style>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-mood="midnight">
+  <div class="container">
+    <div class="mood-picker" aria-label="Mood selector">
+      <button class="mood-btn active" data-mood-btn="midnight">midnight</button>
+      <button class="mood-btn" data-mood-btn="chill">chill</button>
+      <button class="mood-btn" data-mood-btn="sunset">sunset</button>
+      <button class="mood-btn" data-mood-btn="party">party</button>
+      <button class="mood-btn" data-mood-btn="focus">focus</button>
+      <button class="mood-btn" data-mood-btn="romance">romance</button>
+    </div>
+
+    <div class="login-box">
+      <img src="img.jpg" alt="profile" class="profile-icon">
+      <h2><span class="highlight">LOGIN</span></h2>
+      <form>
+        <label>Email.com/phone no.</label>
+        <input type="text" placeholder="" />
+
+        <label>Enter Password</label>
+        <input type="password" placeholder="" />
+
+        <div class="forgot"><a href="#">forgot password</a></div>
+        <button type="submit">Login</button>
+        <div class="signup"><a href="#">create account</a></div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function applyMood(moodKey) {
+      const selectedMood = moodKey || 'midnight';
+      document.body.setAttribute('data-mood', selectedMood);
+      document.querySelectorAll('.mood-btn').forEach(button => {
+        button.classList.toggle('active', button.dataset.moodBtn === selectedMood);
+      });
+      localStorage.setItem('musicMood', selectedMood);
+    }
+    document.querySelectorAll('.mood-btn').forEach(button => {
+      button.addEventListener('click', () => applyMood(button.dataset.moodBtn));
+    });
+    applyMood(localStorage.getItem('musicMood') || 'midnight');
+    document.querySelector('form').addEventListener('submit', function(event) {
+      event.preventDefault();
+      window.location.href = 'home.html';
+    });
+  </script>
+</body>
+</html>

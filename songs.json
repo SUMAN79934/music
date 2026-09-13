@@ -1,0 +1,34 @@
+[
+  {
+    "id": "midnight-echo",
+    "title": "Midnight Echo",
+    "artist": "Ayla Ray",
+    "duration": "3:42",
+    "icon": "fa-music",
+    "audio": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+  },
+  {
+    "id": "golden-hour",
+    "title": "Golden Hour",
+    "artist": "Sora Bloom",
+    "duration": "4:06",
+    "icon": "fa-sun",
+    "audio": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
+  },
+  {
+    "id": "cloud-drift",
+    "title": "Cloud Drift",
+    "artist": "Nova Lane",
+    "duration": "2:58",
+    "icon": "fa-cloud",
+    "audio": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
+  },
+  {
+    "id": "afterglow",
+    "title": "Afterglow",
+    "artist": "Mira Sky",
+    "duration": "3:31",
+    "icon": "fa-heart",
+    "audio": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3"
+  }
+]
