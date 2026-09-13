@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NightBeat | Video</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-1: #090d18; --bg-2: #111827; --card: rgba(17,24,39,0.72); --text:#f5f7ff; --muted:#cbd5e1; --accent:#7c3aed; --accent-2:#22d3ee; --accent-3:#f472b6; --border:rgba(255,255,255,0.12);
+        }
+        body[data-mood="chill"] { --bg-1:#0f172a; --bg-2:#1d3557; --accent:#38bdf8; --accent-2:#a78bfa; --accent-3:#67e8f9; }
+        body[data-mood="sunset"] { --bg-1:#2b0b2f; --bg-2:#f97316; --accent:#fb7185; --accent-2:#fbbf24; --accent-3:#f59e0b; }
+        body[data-mood="party"] { --bg-1:#130b2a; --bg-2:#7c2d12; --accent:#ec4899; --accent-2:#f59e0b; --accent-3:#a855f7; }
+        body[data-mood="focus"] { --bg-1:#0f172a; --bg-2:#164e63; --accent:#14b8a6; --accent-2:#60a5fa; --accent-3:#34d399; }
+        body[data-mood="romance"] { --bg-1:#1f1033; --bg-2:#4c1d95; --accent:#f472b6; --accent-2:#c084fc; --accent-3:#fda4af; }
+        * { box-sizing: border-box; }
+        body {
+            margin:0; min-height:100vh; font-family:'Segoe UI',sans-serif; color: var(--text);
+            background: linear-gradient(135deg, rgba(8,12,24,0.8), rgba(15,23,42,0.72)), url('https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat fixed; display:flex; align-items:center; justify-content:center; padding:20px 14px 90px;
+        }
+        .video-container {
+            width: min(92vw, 480px); background: rgba(17,24,39,0.72); border:1px solid var(--border); border-radius:22px; box-shadow:0 22px 46px rgba(15,23,42,0.35); padding: 22px 18px; text-align:center; backdrop-filter: blur(10px);
+        }
+        .mood-picker { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom: 16px; }
+        .mood-btn { border:1px solid var(--border); border-radius:999px; background: rgba(255,255,255,0.06); color: var(--text); padding: 8px 12px; cursor:pointer; text-transform:capitalize; font-size:0.76rem; }
+        .mood-btn.active { background: linear-gradient(135deg, var(--accent), var(--accent-2)); border-color: transparent; }
+        .accessing-container { background: rgba(17,24,39,0.65); border-radius:16px; padding:18px 14px; border:1px solid var(--border); }
+        .video-preview { width: 180px; height: 120px; background: #111827; border-radius:12px; margin:0 auto 12px; display:flex; align-items:center; justify-content:center; color:#888; font-size:1.1em; overflow:hidden; position:relative; }
+        .call-btn { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color:#fff; border:none; border-radius:20px; padding:12px 26px; font-size:1.1em; cursor:pointer; width:100%; margin: 10px 0; }
+        .call-btn.end { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .username-input { background:#111827; color:white; border:1px solid rgba(255,255,255,0.08); border-radius:10px; width:90%; margin-bottom:12px; padding:10px 12px; text-align:center; letter-spacing:2px; }
+        .message-box {
+            width: 90%; margin: 12px auto 0; background:#111827; color:#fff; border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:10px 12px; min-height:58px; resize:none;
+        }
+        .dial-btn { background:white; color:#111827; border:none; border-radius:50%; width:54px; height:54px; font-size:1.3em; cursor:pointer; }
+        .bottom-nav {
+            position: fixed; bottom:12px; left:50%; transform: translateX(-50%); width: min(94vw, 520px); display:flex; justify-content:space-around; align-items:center; background: rgba(15,23,42,0.82); border:1px solid var(--border); border-radius:18px; padding:12px 18px; backdrop-filter: blur(14px); z-index:10;
+        }
+        .bottom-nav a { color: white; text-decoration:none; width:44px; height:44px; border-radius:12px; display:grid; place-items:center; font-size:1.3rem; }
+        .bottom-nav a:hover { background: rgba(255,255,255,0.08); }
+    </style>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body data-mood="midnight">
+    <div class="mood-picker" aria-label="Mood selector">
+        <button class="mood-btn active" data-mood-btn="midnight">midnight</button>
+        <button class="mood-btn" data-mood-btn="chill">chill</button>
+        <button class="mood-btn" data-mood-btn="sunset">sunset</button>
+        <button class="mood-btn" data-mood-btn="party">party</button>
+        <button class="mood-btn" data-mood-btn="focus">focus</button>
+        <button class="mood-btn" data-mood-btn="romance">romance</button>
+    </div>
+
+    <div class="video-container">
+        <h2>Video Call</h2>
+        <div class="accessing-container">
+            <p>Accessing Video Call...</p>
+            <div style="display:flex; justify-content:center; gap:16px; margin-bottom:18px;">
+                <div class="video-preview" id="videoPreview">
+                    <video id="liveVideo" autoplay playsinline style="width:100%;height:100%;"></video>
+                    <span id="noVideoText" style="display:none; position:absolute;"><i class="fas fa-user"></i> &nbsp; You</span>
+                    <div style="position:absolute; bottom:8px; right:8px; display:flex; gap:8px;">
+                        <button id="toggleVideoBtn" title="Turn Off Video" style="background:#444; color:#fff; border:none; border-radius:50%; width:32px; height:32px; cursor:pointer;"><i id="videoIcon" class="fas fa-video"></i></button>
+                        <button id="toggleAudioBtn" title="Mute" style="background:#444; color:#fff; border:none; border-radius:50%; width:32px; height:32px; cursor:pointer;"><i id="audioIcon" class="fas fa-microphone"></i></button>
+                    </div>
+                </div>
+                <div class="video-preview" id="otherVideoPreview">
+                    <div id="otherVideo" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#1f2937; color:#aaa;">
+                        <i class="fas fa-user"></i> &nbsp; Other
+                    </div>
+                    <div style="position:absolute; bottom:8px; right:8px; display:flex; gap:8px;">
+                        <button id="toggleOtherVideoBtn" title="Turn Off Video" style="background:#444; color:#fff; border:none; border-radius:50%; width:32px; height:32px; cursor:pointer;"><i id="otherVideoIcon" class="fas fa-video"></i></button>
+                        <button id="toggleOtherAudioBtn" title="Mute" style="background:#444; color:#fff; border:none; border-radius:50%; width:32px; height:32px; cursor:pointer;"><i id="otherAudioIcon" class="fas fa-microphone"></i></button>
+                    </div>
+                </div>
+            </div>
+            <input type="text" id="dialedNumber" class="username-input" placeholder="Type number using keyboard" inputmode="numeric" autocomplete="off">
+            <textarea class="message-box" id="videoMessage" placeholder="Type a message during the call..." inputmode="text"></textarea>
+            <div style="margin: 18px 0; display:flex; justify-content:center;">
+                <div id="dialPad" style="display:grid; grid-template-columns: repeat(3, 60px); gap: 16px;">
+                    <button class="dial-btn">1</button><button class="dial-btn">2</button><button class="dial-btn">3</button>
+                    <button class="dial-btn">4</button><button class="dial-btn">5</button><button class="dial-btn">6</button>
+                    <button class="dial-btn">7</button><button class="dial-btn">8</button><button class="dial-btn">9</button>
+                    <button class="dial-btn">*</button><button class="dial-btn">0</button><button class="dial-btn">#</button>
+                </div>
+            </div>
+            <button id="clearBtn" class="call-btn" style="background: linear-gradient(135deg, #ef4444, #dc2626);"><i class="fas fa-backspace"></i> Clear</button>
+            <button class="call-btn"><i class="fas fa-phone"></i> Call</button>
+            <button class="call-btn end" onclick="window.location.href='home.html'"><i class="fas fa-phone-slash"></i> End</button>
+        </div>
+    </div>
+
+    <nav class="bottom-nav" aria-label="Main navigation">
+        <a href="home.html" aria-label="Home"><i class="fas fa-home"></i></a>
+        <a href="explore.html" aria-label="Explore"><i class="fas fa-compass"></i></a>
+        <a href="search.html" aria-label="Search"><i class="fas fa-search"></i></a>
+        <a href="profile.html" aria-label="Profile"><i class="fas fa-user"></i></a>
+    </nav>
+
+    <script>
+        const video = document.getElementById('liveVideo');
+        const noVideoText = document.getElementById('noVideoText');
+        const toggleVideoBtn = document.getElementById('toggleVideoBtn');
+        const toggleAudioBtn = document.getElementById('toggleAudioBtn');
+        const videoIcon = document.getElementById('videoIcon');
+        const audioIcon = document.getElementById('audioIcon');
+        const toggleOtherVideoBtn = document.getElementById('toggleOtherVideoBtn');
+        const toggleOtherAudioBtn = document.getElementById('toggleOtherAudioBtn');
+        const otherVideoIcon = document.getElementById('otherVideoIcon');
+        const otherAudioIcon = document.getElementById('otherAudioIcon');
+        let mediaStream, videoTrack, audioTrack;
+        let audioEnabled = true, videoEnabled = true, otherVideoEnabled = true, otherAudioEnabled = true;
+
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+                .then(function(stream) {
+                    mediaStream = stream;
+                    video.srcObject = stream;
+                    video.style.display = 'block';
+                    noVideoText.style.display = 'none';
+                    videoTrack = stream.getVideoTracks()[0];
+                    audioTrack = stream.getAudioTracks()[0];
+                    toggleVideoBtn.onclick = function() {
+                        if (videoTrack) {
+                            videoEnabled = !videoEnabled;
+                            videoTrack.enabled = videoEnabled;
+                            videoIcon.className = videoEnabled ? 'fas fa-video' : 'fas fa-video-slash';
+                        }
+                    };
+                    toggleAudioBtn.onclick = function() {
+                        if (audioTrack) {
+                            audioEnabled = !audioEnabled;
+                            audioTrack.enabled = audioEnabled;
+                            audioIcon.className = audioEnabled ? 'fas fa-microphone' : 'fas fa-microphone-slash';
+                        }
+                    };
+                })
+                .catch(function(error) {
+                    console.error('Error accessing media devices.', error);
+                });
+        }
+
+        toggleOtherVideoBtn.onclick = function() {
+            otherVideoEnabled = !otherVideoEnabled;
+            otherVideoIcon.className = otherVideoEnabled ? 'fas fa-video' : 'fas fa-video-slash';
+        };
+        toggleOtherAudioBtn.onclick = function() {
+            otherAudioEnabled = !otherAudioEnabled;
+            otherAudioIcon.className = otherAudioEnabled ? 'fas fa-microphone' : 'fas fa-microphone-slash';
+        };
+
+        const dialedNumber = document.getElementById('dialedNumber');
+        dialedNumber.addEventListener('keydown', (event) => {
+            const value = event.key;
+            if (!/[0-9*#]/.test(value) && !['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight'].includes(value)) {
+                event.preventDefault();
+            }
+        });
+        document.querySelectorAll('.dial-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                dialedNumber.value += this.textContent;
+            });
+        });
+        document.getElementById('clearBtn').onclick = function() {
+            dialedNumber.value = dialedNumber.value.slice(0, -1);
+        };
+
+        function applyMood(moodKey) {
+            const selectedMood = moodKey || 'midnight';
+            document.body.setAttribute('data-mood', selectedMood);
+            document.querySelectorAll('.mood-btn').forEach(button => {
+                button.classList.toggle('active', button.dataset.moodBtn === selectedMood);
+            });
+            localStorage.setItem('musicMood', selectedMood);
+        }
+        document.querySelectorAll('.mood-btn').forEach(button => {
+            button.addEventListener('click', () => applyMood(button.dataset.moodBtn));
+        });
+        applyMood(localStorage.getItem('musicMood') || 'midnight');
+    </script>
+</body>
+</html>
